@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const db = require('../../models');
 const bycrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const config = require('config');
 
 //  middlewares that wraps validator.js validator/sanitation functions
 const { check, validationResult } = require('express-validator');
@@ -41,13 +43,11 @@ router.post('/', [
     const { name, email, password } = req.body;
     // See if user exists
     try {
-      console.log("IN TRY");
       let user = await db.User.findOne({ where: { email } })
       if (user) {
         return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
       }
 
-      console.log("inside try. USer: ", user);
       user = await db.User.create({
         name,
         email,
@@ -59,12 +59,22 @@ router.post('/', [
       user.password = await bycrypt.hash(password, salt);
 
       await user.save();
-      res.send('User registered')
 
+      const payload = {
+        user: {
+          id: user.id,
+        }
+      };
+      jwt.sign(payload, config.get('jwtTokenSecret'), {
+        expiresIn: 360000
+      }, (err, token) => {
+        if (err) throw err;
+        res.json({ token })
+      });
+      // res.send('User registered') 
     } catch (error) {
       console.error(error.message);
       res.status(500).send('Server error');
-
     }
     // Return jsonwebtoken
 
