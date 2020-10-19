@@ -18,7 +18,7 @@ const User = db.define('user', {
     len: [5, 20]
   },
   usersInterested: {
-    type: Sequelize.ARRAY
+    type: Sequelize.ARRAY(Sequelize.STRING)
   },
   createdAt: {
     type: Sequelize.DATE,
@@ -27,4 +27,4 @@ const User = db.define('user', {
   }
 });
 
-module.exports = User = sequelize.models.User;
+module.exports = User;

@@ -5,7 +5,11 @@ const PORT = process.env.PORT || 3000
 const connectDB = require('./config/db');
 
 // Connect DB
-connectDB();
+connectDB
+  .authenticate()
+  .then(() => console.log('Connected'))
+  .catch(err => console.log('Error', err));
+
 
 // Init Middleware
 app.use(express.json({ extended: false }))
