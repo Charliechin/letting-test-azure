@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../../models/User');
+const db = require('../../models');
 const bycrypt = require('bcryptjs');
 
 //  middlewares that wraps validator.js validator/sanitation functions
@@ -11,7 +11,12 @@ const { check, validationResult } = require('express-validator');
 // @desc   Test route
 // @access Public
 
-router.get('/', (req, res) => res.send('User route'));
+router.get('/', (req, res) => {
+  db.User
+    .findAll()
+    .then(users => res.send(users))
+    .catch(err => console.error(err.message));
+})
 
 
 
@@ -36,25 +41,26 @@ router.post('/', [
     const { name, email, password } = req.body;
     // See if user exists
     try {
-
-      let user = await User.findOne({ where: { email } })
+      console.log("IN TRY");
+      let user = await db.User.findOne({ where: { email } })
       if (user) {
-        res.status(400).json({ errors: [{ msg: 'User already exists' }] });
+        return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
       }
 
-      user = new User({
+      console.log("inside try. USer: ", user);
+      user = await db.User.create({
         name,
         email,
         password
       });
-      // Encrypt password
 
+      // Encrypt password 
       const salt = await bycrypt.genSalt(10);
       user.password = await bycrypt.hash(password, salt);
 
       await user.save();
-
       res.send('User registered')
+
     } catch (error) {
       console.error(error.message);
       res.status(500).send('Server error');

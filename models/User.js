@@ -1,30 +1,20 @@
-const Sequelize = require('sequelize');
-const db = require('../config/db');
-
-const User = db.define('user', {
-  name: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    trim: true
-  },
-  email: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    trim: true
-  },
-  password: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    len: [5, 20]
-  },
-  usersInterested: {
-    type: Sequelize.ARRAY(Sequelize.STRING)
-  },
-  createdAt: {
-    type: Sequelize.DATE,
-    defaultValue: Sequelize.fn('NOW')
-
-  }
-});
-
-module.exports = User;
+module.exports = (sequelize, DataTypes) => {
+  const User = sequelize.define('User', {
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      trim: true
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      trim: true
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      len: [5, 20]
+    }
+  });
+  return User;
+};

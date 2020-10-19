@@ -2,13 +2,13 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000
 
-const connectDB = require('./config/db');
+const db = require('./models');
 
 // Connect DB
-connectDB
-  .authenticate()
-  .then(() => console.log('Connected'))
-  .catch(err => console.log('Error', err));
+// db
+//   .authenticate()
+//   .then(() => console.log('Connected'))
+//   .catch(err => console.log('Error', err));
 
 
 // Init Middleware
@@ -22,4 +22,10 @@ app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/properties', require('./routes/api/properties'));
 app.use('/api/profile', require('./routes/api/profile'));
 
-app.listen(PORT, () => console.log(`Server Started on port ${PORT}`));
+db.sequelize.sync().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Listening on http://localhost:${PORT}`);
+  })
+}).catch(err => {
+  console.log(err);
+});
