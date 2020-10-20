@@ -12,7 +12,11 @@ const { check, validationResult } = require('express-validator');
 router.get('/', async (req, res) => {
   db.Property
     .findAll()
-    .then(users => res.send(users))
+    .then(properties => {
+      res.render('properties', {
+        properties
+      });
+    })
     .catch(err => console.error(err.message));
 });
 
