@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000
-const exphbs = require('express-handlebars');
 const path = require('path');
 
 const db = require('./models');
@@ -18,8 +17,6 @@ app.use(express.json({ extended: false }))
 
 app.get('/', (req, res) => res.send('API Running'));
 
-app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
-app.set('view engine', 'handlebars');
 
 app.use(express.static(path.join(__dirname, 'public')));
 
