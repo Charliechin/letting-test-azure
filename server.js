@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000
+const exphbs = require('exphbs');
 
 const db = require('./models');
 
@@ -16,11 +17,15 @@ app.use(express.json({ extended: false }))
 
 app.get('/', (req, res) => res.send('API Running'));
 
+app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
+app.set('view engine', 'handlebars');
+
 // Define users, keeping endpoints resful
 app.use('/api/users', require('./routes/api/users'));
 app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/properties', require('./routes/api/properties'));
 app.use('/api/profile', require('./routes/api/profile'));
+app.use('/api/enquiries', require('./routes/api/enquiries'));
 
 db.sequelize.sync().then(() => {
   app.listen(PORT, () => {

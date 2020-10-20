@@ -1,5 +1,8 @@
+
 module.exports = (sequelize, DataTypes) => {
-  const Property = sequelize.define('User', {
+
+  const Enquiry = require('../models/Enquiry');
+  const Property = sequelize.define('Property', {
     title: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -13,10 +16,11 @@ module.exports = (sequelize, DataTypes) => {
     price: {
       type: DataTypes.STRING,
       allowNull: false
-    },
-    usersInterested: {
-      type: DataTypes.ARRAY(DataTypes.STRING)
     }
+    // usersInterested: {
+    //   type: DataTypes.ARRAY(DataTypes.STRING)
+    // }
+
   });
   return Property;
 };
